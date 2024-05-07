@@ -1,5 +1,5 @@
 const LoanRepayment = require('../models/loanRepayment');
-
+const moment = require('moment');
 // Create a new loan repayment
 exports.createLoanRepayment = async (req, res) => {
   try {
@@ -19,11 +19,32 @@ exports.getLoanRepayments = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.getLoanRepaymentsThis= async (req, res) => {
+  const currentMonth = moment().month();
+  const currentYear = moment().year();
 
+  try {
+    // Use aggregation to filter documents for the current month
+    const loanRepayments = await LoanRepayment.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $month: '$timestamp' }, currentMonth + 1] }, // MongoDB month is 1-indexed, hence +1
+              { $eq: [{ $year: '$timestamp' }, currentYear] }
+            ]
+          }
+        }
+      }
+    ]);
+    res.status(200).send(loanRepayments);
+  }catch{};
+};
 // Get loan repayment by ID
 exports.getLoanRepaymentById = async (req, res) => {
   try {
-    const loanRepayment = await LoanRepayment.findById(req.params.id);
+    const id=req.params.id;
+    const loanRepayment = await LoanRepayment.find({loanId:id});
     if (!loanRepayment) {
       return res.status(404).json({ message: 'Loan repayment not found' });
     }

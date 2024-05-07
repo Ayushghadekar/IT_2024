@@ -10,27 +10,13 @@ exports.createCustomer = async (req, res) => {
 };
 exports.unpaid = async (req, res) => {
   try {
-    // Find all transactions with Status "UnVarified"
- // Find all transactions with Status "UnVarified"
  const transactions = await Transaction.find({ Status: "UnVarified" });
-
- // Initialize a Set to store unique transaction IDs
  const uniqueTransactionIds = new Set();
-
- // Initialize an array to store unpaid customers
  const unpaidCustomers = [];
-
- // Iterate through transactions
  for (const transaction of transactions) {
-   // Ensure the transaction ID is unique
    if (!uniqueTransactionIds.has(String(transaction._id))) {
-     // Add the transaction ID to the Set of unique transaction IDs
      uniqueTransactionIds.add(String(transaction._id));
-
-     // Find the customer associated with this transaction
      const customer = await Customer.findById(transaction.customerId);
-
-     // Add the customer and transaction to the unpaidCustomers array
      unpaidCustomers.push({
        id: customer._id,
        name: customer.name,
@@ -45,8 +31,6 @@ exports.unpaid = async (req, res) => {
      });
    }
  }
-
- // Send the unpaid customers as response
  res.json(unpaidCustomers);
   } catch (error) {
     console.error(error);
@@ -54,15 +38,29 @@ exports.unpaid = async (req, res) => {
   }
 };
 // Get all customers
+
 exports.getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find();
-    res.json(customers);
+    const allCustomers = await Customer.find({});
+    res.status(201).json(allCustomers);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
+exports.getCustomersDash = async (req, res) => {
+  try {
+    const allCustomers = await Customer.find();
+    let totalShares = 0;
+    let length=0;
+    allCustomers.forEach(customer => {
+      totalShares += customer.Shares;
+      length++;
+    });
+    res.status(201).json({ message: "Customer Created Successfully", allCustomers, totalShares,length });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 // Get customer by ID
 exports.getCustomerById = async (req, res) => {
   try {

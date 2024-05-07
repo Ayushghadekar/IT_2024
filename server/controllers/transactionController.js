@@ -10,7 +10,6 @@ exports.createTransaction = async (req, res) => {
     const transaction = await Transaction.create(req.body);
     customer.Transactions.push(transaction._id); // Note the change here
     await Promise.all([transaction.save(), customer.save()]);
-
     res.status(201).json(transaction);
   } catch (err) {
     res.status(400).json({ message: err.message });

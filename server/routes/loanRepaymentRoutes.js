@@ -10,7 +10,7 @@ router.get('/', loanRepaymentController.getLoanRepayments);
 
 // Get loan repayment by ID
 router.get('/:id', loanRepaymentController.getLoanRepaymentById);
-
+router.get('/this',loanRepaymentController.getLoanRepaymentsThis)
 // Update loan repayment
 router.put('/:id', loanRepaymentController.updateLoanRepayment);
 

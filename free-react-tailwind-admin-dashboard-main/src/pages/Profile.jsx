@@ -4,12 +4,14 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import LoanForm from './Form/LoanForm';
+import TableFour from '../components/Tables/TableFour';
 
 const Profile = () => {
   const [user, setUser] = useState('');
   const [loan, setLoan] = useState([]);
   const [loanReq, setLoanReq] = useState(false)
-
+  const[loan_id,setLoanId]=useState();
+  const [checkPaymentFor,setCheckPayment]=useState(false)
   const { id } = useParams();
   console.log(id);
   useEffect(() => {
@@ -27,6 +29,9 @@ const Profile = () => {
     fetchData(); // Call fetchData here
 
   }, [id]);
+  const payment=()=>{
+    setCheckPayment(false)
+  }
   const getName = async (id) => {
     try {
       const response = await axios.get(`http://localhost:3000/api/customers/${id}`);
@@ -35,6 +40,10 @@ const Profile = () => {
 
     }
   }
+  const loanId=(id)=>{
+    setLoanId(id)
+  }
+  console.log(checkPaymentFor)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -103,7 +112,7 @@ const update=()=>{
       <div className='bg-[#093774]  text-white font-bold text-xl text-center mt-4 w-fit p-4' onClick={() => setLoanReq(!loanReq)}> {loanReq ? (<div>close</div>) : (<div>Loan Request</div>)}</div>
       <div className='m-4 w-full flex justify-center'>{loanReq ? (<LoanForm id={id} update={update}/>) : (<div></div>)}</div>
 
-
+{checkPaymentFor? (<TableFour id={loan_id} check={payment} />)  :(
       <div className=''>
         {loan.map((item, index) => (
           <div key={index} className='grid grid-cols-6 mt-4 bg-[#fff0bd]'>
@@ -148,7 +157,7 @@ const update=()=>{
             <div className='border-[#093774] border-2 min-h-max'>
               <div>
                 <div>
-                  <div className='font-bold text-white text-l h-16 flex items-center justify-center text-center bg-[#093774]'>Check Payment Status</div>
+                  <div className='font-bold text-white text-l h-16 flex items-center justify-center text-center bg-[#093774]' onClick={()=>{setCheckPayment(true);setLoanId(item._id)}}>Check Payment Status</div>
                   <div className='font-bold text-black text-l justify-center text-center'>Name Of Guarantor</div>
                   <ol className='flex flex-col justify-center pl-7'>
                     <li className='text-black'>1)hjdjjbndjn</li>
@@ -162,7 +171,7 @@ const update=()=>{
             </div>
           </div>
         ))}
-      </div>
+      </div>)}
     </DefaultLayout>
   );
 };

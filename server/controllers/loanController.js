@@ -1,5 +1,19 @@
 const Loan = require('../models/loan');
 const Customer=require('../models/customer')
+const LoanRepayment=require('../models/loanRepayment')
+const axios=require('axios')
+function calculateCompoundInterest(principal, rate, time) {
+  return principal * Math.pow((1 + rate), time);
+}
+
+// Function to calculate monthly payment
+function calculateMonthlyPayment(principal, interestRate, term) {
+  const monthlyInterestRate = interestRate / 12;
+  const numerator = principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, term);
+  const denominator = Math.pow(1 + monthlyInterestRate, term) - 1;
+  return numerator / denominator;
+}
+// http://localhost:5173/profile/663723fb5343a5f434552735
 // Create a new loan
 exports.createLoan = async (req, res) => {
   try {
@@ -13,9 +27,12 @@ exports.createLoan = async (req, res) => {
     const loan = await Loan.create(req.body);
     loan.Gurentier1=Gur1._id;
     loan.Gurentier2=Gur2._id;
+    loan.startDate=new Date();
     customer.Loan.push(loan._id);
     await Promise.all([loan.save(), customer.save()]);
-
+    const id=loan._id;
+    const res2= await axios.post(`http://localhost:3000/api/loans/createLoanRepaymentSchedule/${id}`);
+    console.log(res2);
     res.status(201).json(loan);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -74,3 +91,45 @@ exports.deleteLoan = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.createLoanRepaymentSchedule = async (req, res) => {
+  try {
+      const loanId = req.params.id;
+      const loan = await Loan.findById(loanId);
+
+      if (!loan) {
+          throw new Error('Loan not found');
+      }
+
+      const { amount, interestRate, term, startDate } = loan;
+      const monthlyPayment = calculateMonthlyPayment(amount, interestRate, term);
+      const remainingBalance = amount;
+      let currentDate = new Date(startDate);
+      let currentBalance = amount;
+
+      for (let i = 0; i < term; i++) {
+          const interest = currentBalance * interestRate;
+          const principal = monthlyPayment - interest;
+
+          // Calculate compound interest
+          currentBalance = calculateCompoundInterest(currentBalance, interestRate, 1);
+
+          // Create loan repayment entry
+          const loanRepayment = new LoanRepayment({
+              loanId,
+              amount: monthlyPayment,
+              ChequeNo: "YourChequeNo",
+              timestamp: currentDate
+          });
+
+          await loanRepayment.save();
+
+          // Move to next month
+          currentDate.setMonth(currentDate.getMonth() + 1);
+      }
+      res.status(200).json({ message: 'Loan repayment schedule created successfully' });
+  } catch (error) {
+      console.error('Error creating loan repayment schedule:', error.message);
+      res.status(500).json({ message: error.message });
+  }
+}

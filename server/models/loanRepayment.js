@@ -10,6 +10,11 @@ const loanRepaymentSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  status:{
+    type:Boolean,
+    require:true,
+    default:false
+  },
   ChequeNo:{
     type:String,
     required:true,

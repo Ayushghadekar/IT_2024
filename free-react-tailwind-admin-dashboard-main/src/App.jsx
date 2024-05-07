@@ -37,7 +37,6 @@ function App() {
             token==='true'?
            ( <>
             
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ECommerce />
             </>):(<Login/>)
           }
@@ -46,7 +45,7 @@ function App() {
           path="/BoardMember"
           element={
             <>
-              <PageTitle title="Board Member | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+
               <Calendar />
             </>
           }
@@ -55,7 +54,6 @@ function App() {
           path="/profile/:id"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Profile />
             </>
           }
@@ -64,7 +62,6 @@ function App() {
           path="/LoanRequest"
           element={
             <>
-              <PageTitle title="LoanRequest | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <LoanForm />
             </>
           }
@@ -73,7 +70,6 @@ function App() {
           path="/forms/form-layout"
           element={
             <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <FormLayout />
             </>
           }
@@ -82,7 +78,6 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Tables />
             </>
           }
