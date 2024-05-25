@@ -20,7 +20,7 @@ const Profile = () => {
         const response = await axios.get(`http://localhost:3000/api/customers/${id}`);
         setUser(response.data);
         setLoan(response.data.Loan)
-        console.log(loan);
+    
       } catch (error) {
         console.error('Error fetching table data:', error);
       }
@@ -43,6 +43,14 @@ const Profile = () => {
   const loanId=(id)=>{
     setLoanId(id)
   }
+  const ApproveLoan=async(id)=>{
+    try {
+      const response = await axios.put(`http://localhost:3000/api/loans/${id}`, {Status:"Approved"});
+      console.log(response);
+    } catch (error) {
+      
+    }
+  }
   console.log(checkPaymentFor)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -54,6 +62,7 @@ const Profile = () => {
 const update=()=>{
   fetchData();
 }
+console.log(loan);
   return (
     <DefaultLayout>
       <div className='w-[100%] grid grid-cols-5 gap-3'>
@@ -140,8 +149,8 @@ const update=()=>{
                     <input defaultValue={item.DemandForLone} className='text-black bg-transparent focus:outline-none border-b-2 border-[#093774] w-full max-w-md' />
                   </div>
                   <div className="flex gap-x-2">
-                    <label className="font-bold text-black">Amount:</label>
-                    <input defaultValue={item.amount} className='text-black bg-transparent focus:outline-none border-b-2 border-[#093774] w-full max-w-md' />
+                    <label className="font-bold text-black">Status:</label>
+                    <input defaultValue={item.Status} className='text-black bg-transparent focus:outline-none border-b-2 border-[#093774] w-full max-w-md' />
                   </div>
                   <div className="flex gap-x-2">
                     <label className="font-bold text-black">Cheque No:</label>
@@ -157,16 +166,17 @@ const update=()=>{
             <div className='border-[#093774] border-2 min-h-max'>
               <div>
                 <div>
-                  <div className='font-bold text-white text-l h-16 flex items-center justify-center text-center bg-[#093774]' onClick={()=>{setCheckPayment(true);setLoanId(item._id)}}>Check Payment Status</div>
+                {item.Status==="Approved" ? (<div className='font-bold text-white text-l h-16 flex items-center justify-center text-center bg-[#093774]' onClick={()=>{setCheckPayment(true);setLoanId(item._id)}}>Check Payment Status</div>) : (<div className='font-bold text-white text-l h-16 flex items-center justify-center text-center bg-[#093774]' onClick={()=>{ApproveLoan(item._id)}}>Aprove Loan</div>)}
                   <div className='font-bold text-black text-l justify-center text-center'>Name Of Guarantor</div>
                   <ol className='flex flex-col justify-center pl-7'>
-                    <li className='text-black'>1)hjdjjbndjn</li>
-                    <li className='text-black'>2)Mr. N.V. Anasane</li>
+                    <li className='text-black'>1){item.Gurentier1Name}</li>
+                    <li className='text-black'>2){item.Gurentier2Name}</li>
                   </ol>
                 </div>
                 <div className='flex flex-row mt-4'>
                   <p className='text-black'><span className='font-bold text-black text-l mt-5 pl-6'>Place:</span> Amravati</p>
                 </div>
+                
               </div>
             </div>
           </div>

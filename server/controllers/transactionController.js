@@ -1,5 +1,6 @@
 const Transaction = require('../models/transaction');
 const Customer = require("../models/customer")
+const LoanRepayment = require("../models/loanRepayment")
 exports.createTransaction = async (req, res) => {
   try {
     const customerId = req.body.customerId;
@@ -15,6 +16,58 @@ exports.createTransaction = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+exports.getHistory = async (req, res) => {
+  try {
+    // Fetch all transactions and populate customer names
+    const transactions = await Transaction.find()
+      .populate('customerId', 'name') // Assuming 'name' is the field in the Customer schema
+      .exec();
+
+    // Fetch all loan repayments and populate customer names via loan
+    const loanRepayments = await LoanRepayment.find()
+      .populate({
+        path: 'loanId',
+        populate: {
+          path: 'customerId',
+          model: 'Customer',
+          select: 'name'
+        }
+      })
+      .exec();
+
+    // Format transactions with Status: "Verified"
+    const formattedTransactions = transactions
+      .filter(transaction => transaction.Status === 'Varified')
+      .map(transaction => ({
+        name: transaction.customerId.name,
+        paymentFor: transaction.type === 'Loan' ? 'Loan' : 'Subscription',
+        chequeNo: transaction.ChequeNo,
+        date: transaction.timestamp
+      }));
+
+    // Format loan repayments with status: true
+    const formattedLoanRepayments = loanRepayments
+      .filter(repayment => repayment.status === true)
+      .map(repayment => ({
+        name: repayment.loanId.customerId.name,
+        paymentFor: 'Loan Repayment',
+        chequeNo: repayment.ChequeNo,
+        date: repayment.timestamp
+      }));
+
+    const history = [...formattedTransactions, ...formattedLoanRepayments];
+
+    res.status(200).json({
+      message: 'Transaction and loan repayment history retrieved successfully',
+      history
+    });
+  } catch (err) {
+    console.error('Error fetching history:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 exports.verifyPayment = async (req, res) => {
   let transactionID = req.params.id;
   console.log(transactionID);
@@ -26,7 +79,8 @@ exports.verifyPayment = async (req, res) => {
     }
     const customer = await Customer.findById(transaction.customerId);
     transaction.ChequeNo = cheque;
-    transaction.Status = "Varified"; // Set status to 'Verified' when cheque is provided
+    transaction.Status = "Varified";
+    transaction.timestamp = new Date();  // Set status to 'Verified' when cheque is provided
     customer.Shares += transaction.amount;
     await customer.save();
     await transaction.save();

@@ -1,5 +1,7 @@
 const Customer = require('../models/customer');
 const Transaction = require('../models/transaction')
+const Loan = require('../models/loan')
+const LoanRepayment = require('../models/loanRepayment')
 exports.createCustomer = async (req, res) => {
   try {
     const customer = await Customer.create(req.body);
@@ -47,20 +49,55 @@ exports.getCustomers = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 exports.getCustomersDash = async (req, res) => {
   try {
+    // Fetch all customers
     const allCustomers = await Customer.find();
     let totalShares = 0;
-    let length=0;
+    let length = 0;
+
+    // Fetch all loans
+    const allLoans = await Loan.find({ Status: "Approved" });
+
+    // Calculate total approved loan amount
+    let totalApprovedLoans = 0;
+    allLoans.forEach(loan => {
+      totalApprovedLoans += loan.amount;
+    });
+
+    // Fetch all loan repayments
+    const allLoanRepayments = await LoanRepayment.find({ status: true });
+
+    // Calculate total repaid amount
+    let totalRepaidAmount = 0;
+    allLoanRepayments.forEach(repayment => {
+      totalRepaidAmount += repayment.amount;
+    });
+
+    // Calculate total shares and the number of customers
     allCustomers.forEach(customer => {
       totalShares += customer.Shares;
       length++;
     });
-    res.status(201).json({ message: "Customer Created Successfully", allCustomers, totalShares,length });
+
+    // Adjust total shares by subtracting approved loans and adding repaid amounts
+    totalShares = totalShares - totalApprovedLoans + totalRepaidAmount;
+
+    // Send the response
+    res.status(201).json({
+      message: "Customer data retrieved successfully",
+      allCustomers,
+      totalShares,
+      length,
+      totalApprovedLoans
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
+
 // Get customer by ID
 exports.getCustomerById = async (req, res) => {
   try {

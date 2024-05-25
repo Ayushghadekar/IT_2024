@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 
 import Login from './pages/login/login'
 import Tables from './pages/Tables';
+import History from './components/Tables/HistoryTable';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -34,23 +35,30 @@ function App() {
         <Route
           index
           element={
-            token==='true'?
-           ( <>
-            
-              <ECommerce />
-            </>):(<Login/>)
+            token === 'true' ?
+              (<>
+
+                <ECommerce />
+              </>) : (<Login />)
           }
         />
         <Route
           path="/BoardMember"
           element={
             <>
-
               <Calendar />
             </>
           }
         />
         <Route
+          path="/history"
+          element={
+            <>
+              <History />
+            </>
+          }
+        />
+            <Route
           path="/profile/:id"
           element={
             <>
@@ -82,7 +90,7 @@ function App() {
             </>
           }
         />
-        
+
       </Routes>
     </>
   );

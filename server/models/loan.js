@@ -64,6 +64,12 @@ const loanSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"Customer"
   },
+  Gurentier1Name:{
+    type:String,
+  },
+  Gurentier2Name:{
+    type:String,
+  },
   Gurentier2:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Customer"

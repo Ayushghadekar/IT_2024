@@ -7,7 +7,7 @@ router.post('/', loanRepaymentController.createLoanRepayment);
 
 // Get all loan repayments
 router.get('/', loanRepaymentController.getLoanRepayments);
-
+router.put('/updateStatus/:id', loanRepaymentController.updateLoanRepaymentStatus);
 // Get loan repayment by ID
 router.get('/:id', loanRepaymentController.getLoanRepaymentById);
 router.get('/this',loanRepaymentController.getLoanRepaymentsThis)

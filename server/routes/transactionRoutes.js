@@ -8,7 +8,7 @@ router.post('/', transactionController.createTransaction);
 // Get all transactions
 router.get('/', transactionController.getTransactions);
 
-
+router.get('/getHistory',transactionController.getHistory)
 
 // Get transaction by ID
 router.get('/:id', transactionController.getTransactionById);
