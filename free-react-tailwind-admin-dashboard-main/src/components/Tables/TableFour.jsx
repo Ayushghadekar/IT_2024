@@ -10,7 +10,7 @@ const TableFour = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/loanRepayments/${id}`);
+        const response = await axios.get(`https://it-2024.onrender.com/api/loanRepayments/${id}`);
         setTableData(response.data);
       } catch (error) {
         console.error('Error fetching table data:', error);
@@ -35,7 +35,7 @@ const TableFour = ({ id }) => {
 
   const handleConfirm = async (chequeNumber) => {
     try {
-      const response = await axios.put(`http://localhost:3000/api/loanRepayments/updateStatus/${currentRepaymentId}`, {
+      const response = await axios.put(`https://it-2024.onrender.com/api/loanRepayments/updateStatus/${currentRepaymentId}`, {
         cheque: chequeNumber,
       });
       const updatedRepayment = response.data;

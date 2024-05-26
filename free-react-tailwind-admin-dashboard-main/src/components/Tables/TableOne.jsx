@@ -15,15 +15,15 @@ const TableOne = ({ amount }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/customers/schedule');
-        const res2 = await axios.get('http://localhost:3000/api/customers/user');
+        const response = await axios.get('https://it-2024.onrender.com/api/customers/schedule');
+        const res2 = await axios.get('https://it-2024.onrender.com/api/customers/user');
         let totalShares = Math.round(res2.data.totalShares);
         let length = res2.data.length;
         let loan= Math.round(res2.data.totalApprovedLoans);
         amount(totalShares, length,loan);
         setTableData(response.data);
 
-        const loanResponse = await axios.get('http://localhost:3000/api/loanRepayments');
+        const loanResponse = await axios.get('https://it-2024.onrender.com/api/loanRepayments');
         console.log(loanResponse.data);
         setLoanRepayments(loanResponse.data);
 
@@ -75,7 +75,7 @@ const TableOne = ({ amount }) => {
   const handleConfirmPayment = async () => {
     try {
       const { id, cheque } = selectedTransaction;
-      const res = await axios.post(`http://localhost:3000/api/transactions/varification/${id}`, { cheque });
+      const res = await axios.post(`https://it-2024.onrender.com/api/transactions/varification/${id}`, { cheque });
       setData(res.data);
       setModalOpen(false);
     } catch (error) {

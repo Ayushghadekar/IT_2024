@@ -8,7 +8,7 @@ const TableTwo = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/customers');
+                const response = await axios.get('https://it-2024.onrender.com/api/customers');
                 setTableData(response.data);
                 console.log(response.data);
             } catch (error) {

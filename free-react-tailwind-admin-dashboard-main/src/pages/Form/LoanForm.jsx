@@ -34,7 +34,7 @@ const LoanForm = ({ id , update}) => {
     e.preventDefault();
     try {
       
-      const res = await axios.post('http://localhost:3000/api/loans/', formData);
+      const res = await axios.post('https://it-2024.onrender.com/api/loans/', formData);
       console.log(res);
       alert(res.data);
       // Clear form data after successful submission

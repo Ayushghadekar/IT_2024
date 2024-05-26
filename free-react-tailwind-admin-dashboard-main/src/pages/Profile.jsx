@@ -17,7 +17,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/customers/${id}`);
+        const response = await axios.get(`https://it-2024.onrender.com/api/customers/${id}`);
         setUser(response.data);
         setLoan(response.data.Loan)
     
@@ -34,7 +34,7 @@ const Profile = () => {
   }
   const getName = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/customers/${id}`);
+      const response = await axios.get(`https://it-2024.onrender.com/api/customers/${id}`);
       return response.data.name
     } catch {
 
@@ -45,7 +45,7 @@ const Profile = () => {
   }
   const ApproveLoan=async(id)=>{
     try {
-      const response = await axios.put(`http://localhost:3000/api/loans/${id}`, {Status:"Approved"});
+      const response = await axios.put(`https://it-2024.onrender.com/api/loans/${id}`, {Status:"Approved"});
       console.log(response);
     } catch (error) {
       

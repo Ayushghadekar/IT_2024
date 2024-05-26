@@ -25,7 +25,7 @@ const FormLayout = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-      const res=await axios.post('http://localhost:3000/api/customers/',formData);
+      const res=await axios.post('https://it-2024.onrender.com/api/customers/',formData);
       console.log(res)
       alert(res.data);
       setFormData({

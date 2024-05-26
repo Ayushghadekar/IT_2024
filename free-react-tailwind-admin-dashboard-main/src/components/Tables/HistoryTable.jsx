@@ -10,7 +10,7 @@ const History = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/transactions/getHistory`);
+        const response = await axios.get(`https://it-2024.onrender.com/api/transactions/getHistory`);
         const sortedHistory = response.data.history.sort((a, b) => new Date(b.date) - new Date(a.date));
         setHistory(sortedHistory);
         setFilteredHistory(sortedHistory);
