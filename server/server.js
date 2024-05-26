@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Bank Management System!'); // Send welcome message as response
   });
 
-mongoose.connect('mongodb://localhost:27017/bank_management', {
+mongoose.connect('mongodb+srv://major:major@cluster0.fiqom55.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
