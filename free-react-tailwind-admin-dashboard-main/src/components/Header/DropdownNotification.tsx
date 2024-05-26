@@ -4,8 +4,8 @@ const DropdownNotification = () => {
 
   const schedule = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/api/transactions/Create_Schedule');
-
+      const res = await axios.post('https://it-2024.onrender.com/api/transactions/Create_Schedule');
+      window.location.reload();
     } catch {
 
     }
